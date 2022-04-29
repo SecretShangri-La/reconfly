@@ -370,6 +370,10 @@ Install_WireGuardTools_Fedora() {
 Install_WireGuardTools_Arch() {
     pacman -Sy iproute2 openresolv wireguard-tools --noconfirm
 }
+Install_WireGuardTools_SUSE() {
+    zypper up
+    zypper in -y wireguard-tools openresolv iptables iproute2
+}
 
 Install_WireGuardTools() {
     log INFO "Installing wireguard-tools..."
@@ -396,8 +400,14 @@ Install_WireGuardTools() {
         Install_WireGuardTools_Arch
         ;;
     *kali*)
-	Install_WireGuardTools_Debian
-	;;
+	    Install_WireGuardTools_Debian
+	    ;;
+    *opnsuse-leap*)
+        Install_WireGuardTools_SUSE
+        ;;
+    *opensuse-tumbleweed*)
+        Install_WireGuardTools_SUSE
+        ;;
     *)
         if [[ ${SysInfo_RelatedOS} = *rhel* || ${SysInfo_RelatedOS} = *fedora* ]]; then
             Install_WireGuardTools_CentOS
