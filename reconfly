@@ -664,7 +664,7 @@ Get_IPv6_addr() {
     else
         log INFO "IPv6アドレスの検出:${FontColor_Purple}${IPv6_addr}${FontColor_Suffix}"
         unset answer_YN
-        read -p "修正しますんか?[y/N] " answer_YN
+        read -p "修正しますか?[y/N] " answer_YN
         case ${answer_YN:-n} in
         Y | y)
             Input_IPv6_addr
