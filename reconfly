@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-shVersion='v0.1.2'
+shVersion='v0.1.3'
 
 FontColor_Red="\033[31m"
 FontColor_Red_Bold="\033[1;31m"
@@ -370,10 +370,6 @@ Install_WireGuardTools_Fedora() {
 Install_WireGuardTools_Arch() {
     pacman -Sy iproute2 openresolv wireguard-tools --noconfirm
 }
-Install_WireGuardTools_SUSE() {
-    zypper up
-    zypper in -y wireguard-tools openresolv iptables iproute2
-}
 
 Install_WireGuardTools() {
     log INFO "Installing wireguard-tools..."
@@ -400,14 +396,8 @@ Install_WireGuardTools() {
         Install_WireGuardTools_Arch
         ;;
     *kali*)
-	    Install_WireGuardTools_Debian
-	    ;;
-    *opnsuse-leap*)
-        Install_WireGuardTools_SUSE
-        ;;
-    *opensuse-tumbleweed*)
-        Install_WireGuardTools_SUSE
-        ;;
+	Install_WireGuardTools_Debian
+	;;
     *)
         if [[ ${SysInfo_RelatedOS} = *rhel* || ${SysInfo_RelatedOS} = *fedora* ]]; then
             Install_WireGuardTools_CentOS
@@ -547,6 +537,35 @@ Disable_WireGuard() {
     else
         log INFO "WireGuard is disabled."
     fi
+}
+
+Check_Tor(){
+    ORouter_Status=$(systemctl is-active tor)
+    ORouter_SelfStart=$(systemctl is-enabled tor)
+}
+
+Enable_Tor(){
+    log INFO "Stating Tor service..." 
+    Check_Tor
+    if [[ ${ORouter_SelfStart} != enabled ]]; then
+      log INFO "Tor service is being enabled!"
+      systemctl enable tor
+    else
+      systemctl start tor
+      log INFO "Tor is running!"
+    fi
+}
+
+Restart_Tor(){
+    log INFO "Stoping Tor service..."
+    systemctl stop tor
+    systemctl restart tor
+    log INFO "Restarting Tor services.."
+}
+
+Disable_Tor(){
+    systemctl stop tor
+    systemctl disable tor
 }
 
 Print_WireGuard_Log() {
@@ -899,6 +918,8 @@ Check_WARP_WireGuard_Status() {
         ;;
     esac
 }
+
+
 
 Check_ALL_Status() {
     Check_WARP_Client_Status
@@ -1411,6 +1432,15 @@ if [ $# -ge 1 ]; then
         ;;
     menu)
         Start_Menu
+        ;;
+    tor)
+        Enable_Tor
+        ;;
+    dtor)
+        Disable_Tor
+        ;;
+    rtor)
+        Restart_Tor
         ;;
     *)
         log ERROR "Invalid Parameters: $*"
