@@ -398,7 +398,15 @@ Install_WireGuardTools() {
     *kali*)
 	Install_WireGuardTools_Debian
 	;;
-    *blackarch*
+    *blackarch*)
+    	sudo pacman -R systemd-resolvconf
+	sudo touch /etc/resolv.conf
+	
+	{ \
+	echo 'nameserver 1.1.1.1'; \
+	echo 'nameserver 1.0.0.1'; \
+	} > /etc/resolv.conf
+	
         Install_WireGuardToolsArch
         ;;
     *)
