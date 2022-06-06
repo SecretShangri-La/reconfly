@@ -398,6 +398,9 @@ Install_WireGuardTools() {
     *kali*)
 	Install_WireGuardTools_Debian
 	;;
+    *blackarch*
+        Install_WireGuardToolsArch
+        ;;
     *)
         if [[ ${SysInfo_RelatedOS} = *rhel* || ${SysInfo_RelatedOS} = *fedora* ]]; then
             Install_WireGuardTools_CentOS
